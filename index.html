@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary-bg: #87CEEB; /* Sky Blue */
+            --primary-bg: #FF9933; /* Saffron Color */
             --container-bg: #ffffff;
             --text-color: #333333;
             --btn-color: #007BFF;
@@ -40,7 +40,7 @@
             width: 100%;
             max-width: 1000px;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             padding: 30px;
             margin-top: 20px;
         }
@@ -105,7 +105,6 @@
 
         /* Document Upload & Work Exp Section */
         .doc-section, .exp-section { background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #b0d4ff; }
-        .warning-text { background: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; font-size: 13px; margin-bottom: 15px; border: 1px solid #ffeeba; }
         
         .work-exp-block {
             background: #fff; border: 1px solid #ddd; padding: 15px; 
@@ -187,7 +186,7 @@
                     <input type="hidden" id="edit-id" value="">
                     
                     <div class="doc-section form-row" style="background:#e8f4fd;">
-                        <div class="form-col"><label>Upload Employee Photo (JPG/PNG)</label><input type="file" id="empPhoto" accept=".jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Employee Photo (Any Size)</label><input type="file" id="empPhoto" accept=".jpg,.jpeg,.png"></div>
                     </div>
 
                     <div class="form-row">
@@ -222,42 +221,40 @@
 
                     <!-- DOCUMENTS SECTION -->
                     <h3 style="margin-top:30px; text-align: left; border-bottom: 2px solid #ccc; padding-bottom:5px;">Upload Documents</h3>
-                    <div class="warning-text"><strong>Important:</strong> Please upload files between 1 KB and 1 MB to ensure the system saves them properly.</div>
                     
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Aadhaar Number</label><input type="text" id="aadhaarNum"></div>
-                        <div class="form-col"><label>Upload Aadhaar (PDF/JPG/PNG)</label><input type="file" id="aadhaarDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Aadhaar (Any Size)</label><input type="file" id="aadhaarDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Voter Card Number</label><input type="text" id="voterNum"></div>
-                        <div class="form-col"><label>Upload Voter Card (PDF/JPG/PNG)</label><input type="file" id="voterDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Voter Card (Any Size)</label><input type="file" id="voterDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
                     <div class="doc-section form-row">
                         <div class="form-col"><label>PAN Card Number</label><input type="text" id="panNum"></div>
-                        <div class="form-col"><label>Upload PAN Card (PDF/JPG/PNG)</label><input type="file" id="panDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload PAN Card (Any Size)</label><input type="file" id="panDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Police Verification Cert Number</label><input type="text" id="policeNum"></div>
-                        <div class="form-col"><label>Upload Certificate (PDF/JPG/PNG)</label><input type="file" id="policeDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Certificate (Any Size)</label><input type="file" id="policeDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Bank Account Number</label><input type="text" id="bankAccNum"></div>
-                        <div class="form-col"><label>Upload Bank Passbook/Cheque (PDF/JPG/PNG)</label><input type="file" id="bankDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Bank Passbook (Any Size)</label><input type="file" id="bankDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
-                    <!-- FIXED: Employee ID Text + Upload -->
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Employee ID (Manual Entry)</label><input type="text" id="empIdInput" required></div>
-                        <div class="form-col"><label>Upload Employee ID Card (PDF/JPG/PNG)</label><input type="file" id="empIdDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Employee ID Card (Any Size)</label><input type="file" id="empIdDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Other Documents (Details)</label><input type="text" id="otherNum"></div>
-                        <div class="form-col"><label>Upload Other Docs (PDF/JPG/PNG)</label><input type="file" id="otherDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
+                        <div class="form-col"><label>Upload Other Docs (Any Size)</label><input type="file" id="otherDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
                     <button type="submit" id="saveBtn" style="width: 100%; margin-top: 10px; padding: 15px; font-size: 18px;">Save Employee Details</button>
@@ -328,6 +325,75 @@
     </div>
 
     <script>
+        // --- INDEXED DB SETUP FOR UNLIMITED STORAGE ---
+        let db;
+        const dbName = "EmployeeDatabase";
+        const dbVersion = 1;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, dbVersion);
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    if (!db.objectStoreNames.contains("employees")) {
+                        db.createObjectStore("employees", { keyPath: "id" });
+                    }
+                };
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve();
+                };
+                request.onerror = (event) => reject("DB Error");
+            });
+        }
+
+        // Initialize DB on page load
+        window.onload = async () => {
+            await initDB();
+        };
+
+        // DB Helper Functions
+        function saveEmployeeToDB(employee) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(["employees"], "readwrite");
+                const store = transaction.objectStore("employees");
+                const request = store.put(employee);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject("Save failed");
+            });
+        }
+
+        function getAllEmployeesFromDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(["employees"], "readonly");
+                const store = transaction.objectStore("employees");
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject("Fetch failed");
+            });
+        }
+
+        function getEmployeeById(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(["employees"], "readonly");
+                const store = transaction.objectStore("employees");
+                const request = store.get(id);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject("Fetch failed");
+            });
+        }
+
+        function deleteEmployeeFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(["employees"], "readwrite");
+                const store = transaction.objectStore("employees");
+                const request = store.delete(id);
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject("Delete failed");
+            });
+        }
+
+
         // --- LOGIN & NAVIGATION ---
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -399,9 +465,8 @@
 
         document.getElementById('employee-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            let employees = JSON.parse(localStorage.getItem('employees')) || [];
             
-            document.getElementById('saveBtn').innerText = "Saving... Please wait";
+            document.getElementById('saveBtn').innerText = "Saving Large Files... Please wait!";
             document.getElementById('saveBtn').disabled = true;
 
             try {
@@ -415,8 +480,23 @@
                     if(c || r || d) workExpArray.push({ comp: c, role: r, dur: d });
                 });
 
+                const editId = document.getElementById('edit-id').value;
+                let existingDocs = {};
+                
+                if (editId) {
+                    const existingEmp = await getEmployeeById(editId);
+                    if(existingEmp && existingEmp.docs) existingDocs = existingEmp.docs;
+                }
+
+                // Gather new files or keep existing ones
+                const getNewOrOld = async (elementId, docKey) => {
+                    const file = document.getElementById(elementId).files[0];
+                    if(file) return await getBase64(file);
+                    return existingDocs[docKey] || null;
+                };
+
                 const empData = {
-                    id: document.getElementById('edit-id').value || Date.now().toString(),
+                    id: editId || Date.now().toString(),
                     empName: document.getElementById('empName').value,
                     compName: document.getElementById('compName').value,
                     fatherName: document.getElementById('fatherName').value,
@@ -435,36 +515,26 @@
                     otherNum: document.getElementById('otherNum').value,
                     workExperience: workExpArray,
                     docs: {
-                        empPhoto: await getBase64(document.getElementById('empPhoto').files[0]),
-                        empIdDoc: await getBase64(document.getElementById('empIdDoc').files[0]),
-                        aadhaarDoc: await getBase64(document.getElementById('aadhaarDoc').files[0]),
-                        voterDoc: await getBase64(document.getElementById('voterDoc').files[0]),
-                        panDoc: await getBase64(document.getElementById('panDoc').files[0]),
-                        policeDoc: await getBase64(document.getElementById('policeDoc').files[0]),
-                        bankDoc: await getBase64(document.getElementById('bankDoc').files[0]),
-                        otherDoc: await getBase64(document.getElementById('otherDoc').files[0]),
+                        empPhoto: await getNewOrOld('empPhoto', 'empPhoto'),
+                        empIdDoc: await getNewOrOld('empIdDoc', 'empIdDoc'),
+                        aadhaarDoc: await getNewOrOld('aadhaarDoc', 'aadhaarDoc'),
+                        voterDoc: await getNewOrOld('voterDoc', 'voterDoc'),
+                        panDoc: await getNewOrOld('panDoc', 'panDoc'),
+                        policeDoc: await getNewOrOld('policeDoc', 'policeDoc'),
+                        bankDoc: await getNewOrOld('bankDoc', 'bankDoc'),
+                        otherDoc: await getNewOrOld('otherDoc', 'otherDoc'),
                     }
                 };
 
-                const editId = document.getElementById('edit-id').value;
-                if (editId) {
-                    const index = employees.findIndex(emp => emp.id === editId);
-                    Object.keys(empData.docs).forEach(key => {
-                        if(!empData.docs[key]) empData.docs[key] = employees[index].docs[key] || null;
-                    });
-                    employees[index] = empData;
-                    alert("Employee Updated Successfully!");
-                } else {
-                    employees.push(empData);
-                    alert("Employee Saved Successfully!");
-                }
-
-                localStorage.setItem('employees', JSON.stringify(employees));
+                await saveEmployeeToDB(empData);
+                
+                alert("Employee Saved Successfully!");
                 showView('view-employee-view');
-                renderEmployeeList();
+                await renderEmployeeList();
 
             } catch (error) {
-                alert("Error saving data. Please ensure files are small in size.");
+                console.error(error);
+                alert("Error saving data!");
             } finally {
                 document.getElementById('saveBtn').innerText = "Save Employee Details";
                 document.getElementById('saveBtn').disabled = false;
@@ -472,16 +542,17 @@
         });
 
         // --- EMPLOYEE DIRECTORY ---
-        function renderEmployeeList() {
+        async function renderEmployeeList() {
             const container = document.getElementById('employee-list-container');
-            container.innerHTML = '';
-            const employees = JSON.parse(localStorage.getItem('employees')) || [];
+            container.innerHTML = '<p>Loading database...</p>';
+            const employees = await getAllEmployeesFromDB();
 
             if(employees.length === 0) {
                 container.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">No employees found. Please add an employee.</p>';
                 return;
             }
 
+            container.innerHTML = '';
             employees.forEach(emp => {
                 let imgHtml = '';
                 if(emp.docs && emp.docs.empPhoto && emp.docs.empPhoto.data) {
@@ -504,18 +575,15 @@
             });
         }
 
-        function deleteEmployee(id) {
+        async function deleteEmployee(id) {
             if(confirm("Are you sure you want to delete this employee?")) {
-                let employees = JSON.parse(localStorage.getItem('employees')) || [];
-                employees = employees.filter(emp => emp.id !== id);
-                localStorage.setItem('employees', JSON.stringify(employees));
-                renderEmployeeList();
+                await deleteEmployeeFromDB(id);
+                await renderEmployeeList();
             }
         }
 
-        function editEmployee(id) {
-            const employees = JSON.parse(localStorage.getItem('employees')) || [];
-            const emp = employees.find(e => e.id === id);
+        async function editEmployee(id) {
+            const emp = await getEmployeeById(id);
             if(emp) {
                 showView('add-employee-view');
                 document.getElementById('form-title').innerText = "Edit Employee";
@@ -535,8 +603,8 @@
         }
 
         // --- FULL PROFILE MODAL & PDF DOWNLOAD ---
-        function viewProfile(id) {
-            const emp = (JSON.parse(localStorage.getItem('employees')) || []).find(e => e.id === id);
+        async function viewProfile(id) {
+            const emp = await getEmployeeById(id);
             if(emp) {
                 let expHtml = '';
                 if(emp.workExperience && emp.workExperience.length > 0) {
@@ -578,8 +646,8 @@
             }
         }
 
-        function downloadProfilePdf(id) {
-            const emp = (JSON.parse(localStorage.getItem('employees')) || []).find(e => e.id === id);
+        async function downloadProfilePdf(id) {
+            const emp = await getEmployeeById(id);
             if(!emp) return;
 
             // Populate PDF Template
@@ -636,8 +704,8 @@
         }
 
         // --- VIEW DOCS MODAL ---
-        function viewDocs(id) {
-            const emp = (JSON.parse(localStorage.getItem('employees')) || []).find(e => e.id === id);
+        async function viewDocs(id) {
+            const emp = await getEmployeeById(id);
             if(emp) {
                 let html = `<h3>Documents for: ${emp.empName}</h3><br>`;
                 const genDoc = (docObj, title, numStr) => {
@@ -649,7 +717,6 @@
                     return res + `</div>`;
                 };
                 
-                // Fixed: Added Police Doc & Other Doc in View Documents Modal
                 html += genDoc(emp.docs.empPhoto, 'Employee Photo', '');
                 html += genDoc(emp.docs.empIdDoc, 'Employee ID', emp.empIdInput);
                 html += genDoc(emp.docs.aadhaarDoc, 'Aadhaar Card', emp.aadhaarNum);
@@ -667,25 +734,6 @@
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         }
-
-        // --- FILE SIZE VALIDATION (1 KB to 1 MB) ---
-        document.querySelectorAll('input[type="file"]').forEach(input => {
-            input.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const minSize = 1024; // 1 KB
-                    const maxSize = 1024 * 1024; // 1 MB
-                    
-                    if (file.size < minSize) {
-                        alert("ফাইলের সাইজ খুব ছোট! অনুগ্রহ করে ১ KB থেকে ১ MB এর মধ্যে ফাইল নির্বাচন করুন।");
-                        this.value = ""; // Clear the selected file
-                    } else if (file.size > maxSize) {
-                        alert("ফাইলের সাইজ খুব বড়! অনুগ্রহ করে ১ KB থেকে ১ MB এর মধ্যে ফাইল নির্বাচন করুন।");
-                        this.value = ""; // Clear the selected file
-                    }
-                }
-            });
-        });
 
     </script>
 </body>
