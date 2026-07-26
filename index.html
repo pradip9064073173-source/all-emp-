@@ -222,7 +222,7 @@
 
                     <!-- DOCUMENTS SECTION -->
                     <h3 style="margin-top:30px; text-align: left; border-bottom: 2px solid #ccc; padding-bottom:5px;">Upload Documents</h3>
-                    <div class="warning-text"><strong>Important:</strong> Please upload small size files to ensure the system saves them properly.</div>
+                    <div class="warning-text"><strong>Important:</strong> Please upload files between 1 KB and 1 MB to ensure the system saves them properly.</div>
                     
                     <div class="doc-section form-row">
                         <div class="form-col"><label>Aadhaar Number</label><input type="text" id="aadhaarNum"></div>
@@ -667,6 +667,26 @@
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         }
+
+        // --- FILE SIZE VALIDATION (1 KB to 1 MB) ---
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const minSize = 1024; // 1 KB
+                    const maxSize = 1024 * 1024; // 1 MB
+                    
+                    if (file.size < minSize) {
+                        alert("ফাইলের সাইজ খুব ছোট! অনুগ্রহ করে ১ KB থেকে ১ MB এর মধ্যে ফাইল নির্বাচন করুন।");
+                        this.value = ""; // Clear the selected file
+                    } else if (file.size > maxSize) {
+                        alert("ফাইলের সাইজ খুব বড়! অনুগ্রহ করে ১ KB থেকে ১ MB এর মধ্যে ফাইল নির্বাচন করুন।");
+                        this.value = ""; // Clear the selected file
+                    }
+                }
+            });
+        });
+
     </script>
 </body>
 </html>
