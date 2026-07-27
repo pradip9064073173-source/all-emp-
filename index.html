@@ -16,6 +16,7 @@
             --info-color: linear-gradient(45deg, #4776E6, #8E54E9);
             --success-color: linear-gradient(45deg, #11998e, #38ef7d);
             --whatsapp-color: linear-gradient(45deg, #25D366, #128C7E);
+            --share-color: linear-gradient(45deg, #f2994a, #f2c94c);
         }
 
         * {
@@ -26,7 +27,6 @@
         }
 
         body {
-            /* Multiple Color Animated Background */
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -87,10 +87,12 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
         button.danger { background: var(--danger-color); }
         button.info { background: var(--info-color); }
         button.success { background: var(--success-color); }
         button.whatsapp { background: var(--whatsapp-color); color: white; }
+        button.share { background: var(--share-color); color: #333; }
 
         /* Navigation */
         .nav-menu {
@@ -110,22 +112,19 @@
             transition: transform 0.3s;
         }
         .employee-card:hover { transform: translateY(-5px); }
-
         .employee-card h3 { margin-bottom: 10px; background: none; -webkit-text-fill-color: #333; color: #333; text-align: left;}
         .card-actions { margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .card-actions button { padding: 8px; font-size: 13px; width: 100%; }
-
         .emp-card-img {
             position: absolute; top: 20px; right: 20px; width: 70px; height: 70px;
             border-radius: 50%; object-fit: cover; border: 3px solid #FF512F; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* Document Upload & Work Exp Section */
+        /* Document Upload Sections */
         .doc-section, .exp-section { 
             background: linear-gradient(to right, #f8f9fa, #e9ecef); 
             padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid #8E54E9; 
         }
-        
         .work-exp-block {
             background: #fff; border: 1px solid #ddd; padding: 15px; 
             border-radius: 8px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -138,38 +137,60 @@
             background-color: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center;
             backdrop-filter: blur(5px);
         }
-
         .modal-content {
             background-color: white; padding: 30px; border-radius: 12px;
             width: 95%; max-width: 850px; max-height: 90vh; overflow-y: auto; position: relative;
         }
-
         .close-btn { position: absolute; top: 15px; right: 20px; color: #ff00cc; font-size: 32px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .close-btn:hover { color: #333399; transform: scale(1.1); }
 
         .doc-item { margin-bottom: 20px; padding: 20px; border-radius: 10px; background: #f4f7f6; text-align: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
         .doc-item img { max-width: 100%; border: 3px solid #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 10px; border-radius: 8px; max-height: 400px;}
-        
         .doc-actions { margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        
         .download-link {
             display: inline-block; background: var(--success-color); color: white;
-            padding: 8px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
         }
+        .download-link:hover { transform: translateY(-2px); }
 
         .profile-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
         .profile-table th, .profile-table td { border: 1px solid #eee; padding: 12px; text-align: left; }
         .profile-table th { background-color: #f8f9fa; width: 35%; color: #333; font-weight: bold; }
 
-        /* --- PDF SPECIFIC STYLES --- */
-        #pdf-export-container { position: absolute; top: 0; left: 0; width: 800px; z-index: -1000; opacity: 0; pointer-events: none; }
-        .pdf-page { width: 100%; padding: 40px; box-sizing: border-box; background: #ffffff; font-size: 16px; line-height: 1.6; color: #000; }
-        #profile-pdf-view { border: 2px solid #ccc; }
-        .pdf-header { text-align: center; text-decoration: underline; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #0056b3; background: none; -webkit-text-fill-color: #000;}
-        .pdf-profile-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
-        .pdf-profile-photo { width: 120px; height: 120px; object-fit: cover; border: 2px solid #333; border-radius: 8px; }
-        .pdf-info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .pdf-info-table th, .pdf-info-table td { border: 1px solid #000; padding: 8px; font-size: 15px; }
-        .pdf-info-table th { background-color: #f0f0f0; width: 35%; text-align: left; }
+        /* --- PDF SPECIFIC STYLES (BEAUTIFUL DESIGN) --- */
+        #pdf-export-container { 
+            position: absolute; top: 0; left: -9999px; /* Moved off-screen instead of hidden */
+            width: 800px; z-index: -1000; 
+        }
+        #profile-pdf-view { 
+            background: #ffffff; 
+            padding: 40px; 
+            border: 8px double #128C7E; /* Beautiful Border */
+            border-radius: 15px;
+            color: #000;
+            font-family: 'Arial', sans-serif;
+        }
+        .pdf-header { 
+            text-align: center; 
+            background: linear-gradient(45deg, #128C7E, #25D366); 
+            color: white !important;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px; 
+            font-size: 26px; 
+            font-weight: bold; 
+            -webkit-text-fill-color: white; 
+        }
+        .pdf-profile-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; border-bottom: 3px dashed #ccc; padding-bottom: 20px; }
+        .pdf-profile-photo { width: 130px; height: 130px; object-fit: cover; border: 4px solid #128C7E; border-radius: 10px; }
+        .pdf-section-title {
+            background: #f0f0f0; border-left: 6px solid #128C7E; padding: 8px 15px; margin-bottom: 15px; font-size: 18px; font-weight: bold; color: #333;
+        }
+        .pdf-info-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        .pdf-info-table th, .pdf-info-table td { border: 1px solid #ddd; padding: 10px; font-size: 15px; }
+        .pdf-info-table th { background-color: #f9f9f9; width: 35%; text-align: left; color: #333; }
     </style>
 </head>
 <body>
@@ -302,20 +323,21 @@
             </div>
         </div>
 
-        <!-- HIDDEN PDF TEMPLATE -->
+        <!-- HIDDEN PDF TEMPLATE (Now Off-Screen for Better Rendering) -->
         <div id="pdf-export-container">
-            <div id="profile-pdf-view" class="pdf-page">
-                <h2 class="pdf-header">EMPLOYEE FULL PROFILE</h2>
+            <div id="profile-pdf-view">
+                <h2 class="pdf-header">EMPLOYEE OFFICIAL PROFILE</h2>
+                
                 <div class="pdf-profile-top">
                     <div>
-                        <h2><span id="pdf-emp-name"></span></h2>
-                        <p style="font-size: 18px; color: #555;"><strong>Company:</strong> <span id="pdf-comp-name"></span></p>
-                        <p style="font-size: 18px; color: #555;"><strong>Emp ID:</strong> <span id="pdf-emp-id"></span></p>
+                        <h2 style="font-size: 28px; margin-bottom:10px; color:#128C7E;"><span id="pdf-emp-name"></span></h2>
+                        <p style="font-size: 18px; color: #555; margin-bottom:5px;"><strong>Company:</strong> <span id="pdf-comp-name"></span></p>
+                        <p style="font-size: 18px; color: #555;"><strong>Employee ID:</strong> <span id="pdf-emp-id"></span></p>
                     </div>
                     <img id="pdf-emp-photo" class="pdf-profile-photo" src="" style="display:none;" alt="Photo">
                 </div>
                 
-                <h3 style="margin-bottom: 10px; background:#f0f0f0; padding:5px;">Personal Details</h3>
+                <div class="pdf-section-title">👤 Personal Details</div>
                 <table class="pdf-info-table">
                     <tr><th>Father's Name</th><td id="pdf-fname"></td></tr>
                     <tr><th>Mother's Name</th><td id="pdf-mname"></td></tr>
@@ -326,7 +348,7 @@
                     <tr><th>Permanent Address</th><td id="pdf-perm"></td></tr>
                 </table>
 
-                <h3 style="margin-bottom: 10px; background:#f0f0f0; padding:5px;">Identification Details</h3>
+                <div class="pdf-section-title">🛡️ Identification & Bank Details</div>
                 <table class="pdf-info-table">
                     <tr><th>Aadhaar Number</th><td id="pdf-aadhaar"></td></tr>
                     <tr><th>Voter Card Number</th><td id="pdf-voter"></td></tr>
@@ -335,8 +357,10 @@
                     <tr><th>Police Verification Cert</th><td id="pdf-police"></td></tr>
                 </table>
 
-                <h3 style="margin-bottom: 10px; background:#f0f0f0; padding:5px;">Work Experience</h3>
-                <div id="pdf-work-exp"></div>
+                <div class="pdf-section-title">💼 Work Experience</div>
+                <div id="pdf-work-exp" style="margin-bottom: 20px;"></div>
+                
+                <p style="text-align: center; color: #777; font-size: 12px; margin-top: 30px;">Document generated securely by Index Wallet System</p>
             </div>
         </div>
 
@@ -589,7 +613,7 @@
             }
         }
 
-        // --- FULL PROFILE MODAL, PDF & DIRECT WHATSAPP SHARE ---
+        // --- FULL PROFILE MODAL, SMART PDF & FULL WHATSAPP SHARE ---
         async function viewProfile(id) {
             const emp = await getEmployeeById(id);
             if(emp) {
@@ -607,7 +631,7 @@
                         <h2 style="margin:0;">Employee Profile</h2>
                         <div>
                             <button class="whatsapp" onclick="shareToWhatsApp('${emp.id}')">💬 Share to WhatsApp</button>
-                            <button class="info" onclick="downloadProfilePdf('${emp.id}')">📄 Download PDF</button>
+                            <button class="info" id="pdf-btn-${emp.id}" onclick="downloadProfilePdf('${emp.id}', this)">📄 Download PDF</button>
                         </div>
                     </div>
                     <table class="profile-table">
@@ -634,7 +658,7 @@
             }
         }
 
-        // DIRECT WHATSAPP SHARE LOGIC
+        // FULL WHATSAPP SHARE LOGIC (FIXED)
         async function shareToWhatsApp(id) {
             const emp = await getEmployeeById(id);
             if(!emp) return;
@@ -644,21 +668,37 @@
             shareText += `*Company:* ${emp.compName}\n`;
             shareText += `*Emp ID:* ${emp.empIdInput}\n`;
             shareText += `*Father's Name:* ${emp.fatherName}\n`;
+            shareText += `*Mother's Name:* ${emp.motherName}\n`;
+            if(emp.spouseName) shareText += `*Spouse Name:* ${emp.spouseName}\n`;
             shareText += `*DOB:* ${emp.dob} | *DOJ:* ${emp.doj}\n`;
             shareText += `*Present Address:* ${emp.presAddress}\n`;
+            shareText += `*Permanent Address:* ${emp.permAddress}\n\n`;
+
+            shareText += `*-- Identification & Bank --*\n`;
             if(emp.aadhaarNum) shareText += `*Aadhaar:* ${emp.aadhaarNum}\n`;
-            if(emp.panNum) shareText += `*PAN:* ${emp.panNum}\n\n`;
+            if(emp.voterNum) shareText += `*Voter Card:* ${emp.voterNum}\n`;
+            if(emp.panNum) shareText += `*PAN Card:* ${emp.panNum}\n`;
+            if(emp.bankAccNum) shareText += `*Bank A/C:* ${emp.bankAccNum}\n`;
+            if(emp.policeNum) shareText += `*Police Verification:* ${emp.policeNum}\n`;
+            if(emp.otherNum) shareText += `*Other Docs:* ${emp.otherNum}\n\n`;
+
             shareText += `_Generated securely via Index Wallet_`;
 
-            // WhatsApp Direct URL Scheme
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
             window.open(whatsappUrl, '_blank');
         }
 
-        async function downloadProfilePdf(id) {
+        // SMART PDF DOWNLOAD LOGIC (FIXED - NO ALERT, BEAUTIFUL DESIGN)
+        async function downloadProfilePdf(id, btnElement) {
             const emp = await getEmployeeById(id);
             if(!emp) return;
 
+            // Change button text instantly
+            const originalBtnText = btnElement.innerHTML;
+            btnElement.innerHTML = "⏳ Generating PDF...";
+            btnElement.disabled = true;
+
+            // Fill PDF Template
             document.getElementById('pdf-emp-name').innerText = emp.empName;
             document.getElementById('pdf-comp-name').innerText = emp.compName;
             document.getElementById('pdf-emp-id').innerText = emp.empIdInput;
@@ -682,34 +722,46 @@
 
             let expHtmlPdf = '';
             if(emp.workExperience && emp.workExperience.length > 0) {
-                expHtmlPdf = '<ul style="margin-left: 20px;">';
+                expHtmlPdf = '<ul style="margin-left: 20px; font-size: 15px;">';
                 emp.workExperience.forEach(ex => {
                     expHtmlPdf += `<li style="margin-bottom:8px;"><strong>${ex.comp}</strong> — Worked as <strong>${ex.role}</strong> (${ex.dur})</li>`;
                 });
                 expHtmlPdf += '</ul>';
-            } else expHtmlPdf = '<p style="margin-left:5px;">N/A</p>';
+            } else expHtmlPdf = '<p style="margin-left:10px; font-size: 15px; color:#555;">No Work Experience Added.</p>';
             
             document.getElementById('pdf-work-exp').innerHTML = expHtmlPdf;
 
-            const element = document.getElementById('profile-pdf-view');
-            const opt = {
-                margin: 15, filename: 'Profile_' + emp.empName + '.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            // Generate PDF
+            setTimeout(() => {
+                const element = document.getElementById('profile-pdf-view');
+                const opt = {
+                    margin: 10, 
+                    filename: 'Profile_' + emp.empName + '.pdf',
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { scale: 2, useCORS: true, logging: false },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
 
-            alert("Generating PDF Profile, please wait...");
-            html2pdf().set(opt).from(element).save();
+                html2pdf().set(opt).from(element).save().then(() => {
+                    // Restore button after download
+                    btnElement.innerHTML = originalBtnText;
+                    btnElement.disabled = false;
+                }).catch(err => {
+                    console.error("PDF generation failed:", err);
+                    alert("Error generating PDF. Please try again.");
+                    btnElement.innerHTML = originalBtnText;
+                    btnElement.disabled = false;
+                });
+            }, 500); // Small delay to let UI update
         }
 
-        // --- VIEW DOCS MODAL ---
+        // --- VIEW DOCS & SHARE MODAL (RESTORED SHARE OPTION) ---
         async function viewDocs(id) {
             const emp = await getEmployeeById(id);
             if(emp) {
                 let html = `<h3 style="margin-bottom:15px;">Documents: ${emp.empName}</h3>`;
                 
-                const genDoc = (docObj, title, numStr) => {
+                const genDoc = (docObj, docKey, title, numStr) => {
                     let res = `<div class="doc-item"><h4>${title} ${numStr ? '(No: '+numStr+')' : ''}</h4>`;
                     if(docObj && docObj.data) {
                         if(docObj.type.startsWith('image/')) {
@@ -718,7 +770,8 @@
                             res += `<p style="color:#28a745; font-weight:bold; font-size:18px; margin: 10px 0;">📄 File Uploaded Successfully.</p>`;
                         }
                         res += `<div class="doc-actions">
-                                    <a class="download-link" href="${docObj.data}" download="${docObj.name}">⬇️ Download File</a>
+                                    <a class="download-link" href="${docObj.data}" download="${docObj.name}">⬇️ Download</a>
+                                    <button class="share" style="padding: 10px 20px;" onclick="shareSingleDoc('${emp.id}', '${docKey}')">📲 Share Document</button>
                                 </div>`;
                     } else {
                         res += `<p style="color:#777; margin-top:10px;">Not Uploaded</p>`;
@@ -726,17 +779,59 @@
                     return res + `</div>`;
                 };
                 
-                html += genDoc(emp.docs.empPhoto, 'Employee Photo', '');
-                html += genDoc(emp.docs.empIdDoc, 'Employee ID', emp.empIdInput);
-                html += genDoc(emp.docs.aadhaarDoc, 'Aadhaar Card', emp.aadhaarNum);
-                html += genDoc(emp.docs.voterDoc, 'Voter Card', emp.voterNum);
-                html += genDoc(emp.docs.panDoc, 'PAN Card', emp.panNum);
-                html += genDoc(emp.docs.policeDoc, 'Police Verification', emp.policeNum);
-                html += genDoc(emp.docs.bankDoc, 'Bank Details', emp.bankAccNum);
-                html += genDoc(emp.docs.otherDoc, 'Other Documents', emp.otherNum);
+                html += genDoc(emp.docs.empPhoto, 'empPhoto', 'Employee Photo', '');
+                html += genDoc(emp.docs.empIdDoc, 'empIdDoc', 'Employee ID', emp.empIdInput);
+                html += genDoc(emp.docs.aadhaarDoc, 'aadhaarDoc', 'Aadhaar Card', emp.aadhaarNum);
+                html += genDoc(emp.docs.voterDoc, 'voterDoc', 'Voter Card', emp.voterNum);
+                html += genDoc(emp.docs.panDoc, 'panDoc', 'PAN Card', emp.panNum);
+                html += genDoc(emp.docs.policeDoc, 'policeDoc', 'Police Verification', emp.policeNum);
+                html += genDoc(emp.docs.bankDoc, 'bankDoc', 'Bank Details', emp.bankAccNum);
+                html += genDoc(emp.docs.otherDoc, 'otherDoc', 'Other Documents', emp.otherNum);
                 
                 document.getElementById('modal-docs-container').innerHTML = html;
                 document.getElementById('doc-modal').classList.remove('hidden');
+            }
+        }
+
+        // Convert base64 to File object for sharing
+        function dataURLtoFile(dataurl, filename) {
+            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){ u8arr[n] = bstr.charCodeAt(n); }
+            return new File([u8arr], filename, {type:mime});
+        }
+
+        // DOCUMENT SHARE LOGIC
+        async function shareSingleDoc(empId, docKey) {
+            const emp = await getEmployeeById(empId);
+            if(emp && emp.docs && emp.docs[docKey]) {
+                const docObj = emp.docs[docKey];
+                
+                // Native Web Share API (Works best on Mobile Browsers)
+                if (navigator.canShare && navigator.share) {
+                    try {
+                        const file = dataURLtoFile(docObj.data, docObj.name);
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                title: docObj.name,
+                                text: `Document for ${emp.empName}`,
+                                files: [file]
+                            });
+                            return; // Success
+                        }
+                    } catch (error) {
+                        console.log('Error sharing directly:', error);
+                    }
+                } 
+                
+                // Fallback for Desktop/Unsupported Browsers
+                alert("⚠️ আপনার ব্রাউজার সরাসরি ফাইল শেয়ার সাপোর্ট করছে না। ফাইলটি ডাউনলোড করে শেয়ার করুন। (Please download the file to share it.)");
+                const link = document.createElement('a');
+                link.href = docObj.data;
+                link.download = docObj.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         }
 
