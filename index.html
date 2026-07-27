@@ -15,7 +15,7 @@
             --danger-color: linear-gradient(45deg, #cb2d3e, #ef473a);
             --info-color: linear-gradient(45deg, #4776E6, #8E54E9);
             --success-color: linear-gradient(45deg, #11998e, #38ef7d);
-            --share-color: linear-gradient(45deg, #f2994a, #f2c94c);
+            --whatsapp-color: linear-gradient(45deg, #25D366, #128C7E);
         }
 
         * {
@@ -90,7 +90,7 @@
         button.danger { background: var(--danger-color); }
         button.info { background: var(--info-color); }
         button.success { background: var(--success-color); }
-        button.share { background: var(--share-color); color: #333; }
+        button.whatsapp { background: var(--whatsapp-color); color: white; }
 
         /* Navigation */
         .nav-menu {
@@ -589,7 +589,7 @@
             }
         }
 
-        // --- FULL PROFILE MODAL, PDF & TEXT SHARE ---
+        // --- FULL PROFILE MODAL, PDF & DIRECT WHATSAPP SHARE ---
         async function viewProfile(id) {
             const emp = await getEmployeeById(id);
             if(emp) {
@@ -606,7 +606,7 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
                         <h2 style="margin:0;">Employee Profile</h2>
                         <div>
-                            <button class="share" onclick="shareProfileText('${emp.id}')">📲 Share Profile</button>
+                            <button class="whatsapp" onclick="shareToWhatsApp('${emp.id}')">💬 Share to WhatsApp</button>
                             <button class="info" onclick="downloadProfilePdf('${emp.id}')">📄 Download PDF</button>
                         </div>
                     </div>
@@ -634,38 +634,31 @@
             }
         }
 
-        async function shareProfileText(id) {
+        // DIRECT WHATSAPP SHARE LOGIC
+        async function shareToWhatsApp(id) {
             const emp = await getEmployeeById(id);
             if(!emp) return;
 
             let shareText = `*Employee Profile Details*\n\n`;
-            shareText += `Name: ${emp.empName}\n`;
-            shareText += `Company: ${emp.compName}\n`;
-            shareText += `Emp ID: ${emp.empIdInput}\n`;
-            shareText += `Father's Name: ${emp.fatherName}\n`;
-            shareText += `Mother's Name: ${emp.motherName}\n`;
-            shareText += `DOB: ${emp.dob} | DOJ: ${emp.doj}\n`;
-            shareText += `Present Address: ${emp.presAddress}\n`;
-            if(emp.aadhaarNum) shareText += `Aadhaar: ${emp.aadhaarNum}\n`;
-            if(emp.panNum) shareText += `PAN: ${emp.panNum}\n`;
+            shareText += `*Name:* ${emp.empName}\n`;
+            shareText += `*Company:* ${emp.compName}\n`;
+            shareText += `*Emp ID:* ${emp.empIdInput}\n`;
+            shareText += `*Father's Name:* ${emp.fatherName}\n`;
+            shareText += `*DOB:* ${emp.dob} | *DOJ:* ${emp.doj}\n`;
+            shareText += `*Present Address:* ${emp.presAddress}\n`;
+            if(emp.aadhaarNum) shareText += `*Aadhaar:* ${emp.aadhaarNum}\n`;
+            if(emp.panNum) shareText += `*PAN:* ${emp.panNum}\n\n`;
+            shareText += `_Generated securely via Index Wallet_`;
 
-            if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: `${emp.empName} - Profile`,
-                        text: shareText
-                    });
-                } catch (err) { console.log("Share failed", err); }
-            } else {
-                alert("Sharing is not supported on your browser. Please copy details manually.");
-            }
+            // WhatsApp Direct URL Scheme
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         async function downloadProfilePdf(id) {
             const emp = await getEmployeeById(id);
             if(!emp) return;
 
-            // Populate PDF Template
             document.getElementById('pdf-emp-name').innerText = emp.empName;
             document.getElementById('pdf-comp-name').innerText = emp.compName;
             document.getElementById('pdf-emp-id').innerText = emp.empIdInput;
@@ -710,13 +703,13 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // --- VIEW & SHARE DOCS MODAL ---
+        // --- VIEW DOCS MODAL ---
         async function viewDocs(id) {
             const emp = await getEmployeeById(id);
             if(emp) {
                 let html = `<h3 style="margin-bottom:15px;">Documents: ${emp.empName}</h3>`;
                 
-                const genDoc = (docObj, docKey, title, numStr) => {
+                const genDoc = (docObj, title, numStr) => {
                     let res = `<div class="doc-item"><h4>${title} ${numStr ? '(No: '+numStr+')' : ''}</h4>`;
                     if(docObj && docObj.data) {
                         if(docObj.type.startsWith('image/')) {
@@ -725,8 +718,7 @@
                             res += `<p style="color:#28a745; font-weight:bold; font-size:18px; margin: 10px 0;">📄 File Uploaded Successfully.</p>`;
                         }
                         res += `<div class="doc-actions">
-                                    <a class="download-link" href="${docObj.data}" download="${docObj.name}">⬇️ Download</a>
-                                    <button class="share" onclick="shareSingleDoc('${emp.id}', '${docKey}')">📲 Share Document</button>
+                                    <a class="download-link" href="${docObj.data}" download="${docObj.name}">⬇️ Download File</a>
                                 </div>`;
                     } else {
                         res += `<p style="color:#777; margin-top:10px;">Not Uploaded</p>`;
@@ -734,47 +726,17 @@
                     return res + `</div>`;
                 };
                 
-                html += genDoc(emp.docs.empPhoto, 'empPhoto', 'Employee Photo', '');
-                html += genDoc(emp.docs.empIdDoc, 'empIdDoc', 'Employee ID', emp.empIdInput);
-                html += genDoc(emp.docs.aadhaarDoc, 'aadhaarDoc', 'Aadhaar Card', emp.aadhaarNum);
-                html += genDoc(emp.docs.voterDoc, 'voterDoc', 'Voter Card', emp.voterNum);
-                html += genDoc(emp.docs.panDoc, 'panDoc', 'PAN Card', emp.panNum);
-                html += genDoc(emp.docs.policeDoc, 'policeDoc', 'Police Verification', emp.policeNum);
-                html += genDoc(emp.docs.bankDoc, 'bankDoc', 'Bank Details', emp.bankAccNum);
-                html += genDoc(emp.docs.otherDoc, 'otherDoc', 'Other Documents', emp.otherNum);
+                html += genDoc(emp.docs.empPhoto, 'Employee Photo', '');
+                html += genDoc(emp.docs.empIdDoc, 'Employee ID', emp.empIdInput);
+                html += genDoc(emp.docs.aadhaarDoc, 'Aadhaar Card', emp.aadhaarNum);
+                html += genDoc(emp.docs.voterDoc, 'Voter Card', emp.voterNum);
+                html += genDoc(emp.docs.panDoc, 'PAN Card', emp.panNum);
+                html += genDoc(emp.docs.policeDoc, 'Police Verification', emp.policeNum);
+                html += genDoc(emp.docs.bankDoc, 'Bank Details', emp.bankAccNum);
+                html += genDoc(emp.docs.otherDoc, 'Other Documents', emp.otherNum);
                 
                 document.getElementById('modal-docs-container').innerHTML = html;
                 document.getElementById('doc-modal').classList.remove('hidden');
-            }
-        }
-
-        // Convert base64 to File object for sharing
-        function dataURLtoFile(dataurl, filename) {
-            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-            while(n--){ u8arr[n] = bstr.charCodeAt(n); }
-            return new File([u8arr], filename, {type:mime});
-        }
-
-        async function shareSingleDoc(empId, docKey) {
-            const emp = await getEmployeeById(empId);
-            if(emp && emp.docs && emp.docs[docKey]) {
-                const docObj = emp.docs[docKey];
-                
-                if (navigator.canShare && navigator.canShare({ files: [] })) {
-                    try {
-                        const file = dataURLtoFile(docObj.data, docObj.name);
-                        await navigator.share({
-                            title: docObj.name,
-                            text: `Document for ${emp.empName}`,
-                            files: [file]
-                        });
-                    } catch (error) {
-                        console.log('Error sharing:', error);
-                    }
-                } else {
-                    alert("Your browser does not support sharing files directly. Please use the Download button instead.");
-                }
             }
         }
 
