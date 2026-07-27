@@ -8,14 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
-            --primary-bg: #FF9933; /* Saffron Color */
-            --container-bg: #ffffff;
-            --text-color: #333333;
-            --btn-color: #007BFF;
-            --btn-hover: #0056b3;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --success-color: #28a745;
+            --container-bg: rgba(255, 255, 255, 0.95);
+            --text-color: #2c3e50;
+            --btn-color: linear-gradient(45deg, #FF512F, #DD2476);
+            --btn-hover: linear-gradient(45deg, #DD2476, #FF512F);
+            --danger-color: linear-gradient(45deg, #cb2d3e, #ef473a);
+            --info-color: linear-gradient(45deg, #4776E6, #8E54E9);
+            --success-color: linear-gradient(45deg, #11998e, #38ef7d);
+            --share-color: linear-gradient(45deg, #f2994a, #f2c94c);
         }
 
         * {
@@ -26,7 +26,10 @@
         }
 
         body {
-            background-color: var(--primary-bg);
+            /* Multiple Color Animated Background */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: var(--text-color);
             display: flex;
             justify-content: center;
@@ -35,20 +38,31 @@
             padding: 20px;
         }
 
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .container {
             background-color: var(--container-bg);
             width: 100%;
             max-width: 1000px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             padding: 30px;
             margin-top: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
         h1, h2, h3 {
             text-align: center;
-            color: #2c3e50;
+            background: -webkit-linear-gradient(45deg, #ff00cc, #333399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 20px;
+            font-weight: 800;
         }
 
         .hidden { display: none !important; }
@@ -58,25 +72,25 @@
         .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .form-col { flex: 1; min-width: 250px; }
 
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        label { display: block; margin-bottom: 5px; font-weight: 700; color: #444; }
+        input, textarea { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px; transition: 0.3s; }
+        input:focus, textarea:focus { border-color: #8E54E9; outline: none; box-shadow: 0 0 8px rgba(142, 84, 233, 0.4); }
 
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin: 15px 0; }
         .checkbox-group input { width: auto; }
 
         /* Buttons */
         button {
-            background-color: var(--btn-color); color: white; border: none;
-            padding: 10px 20px; border-radius: 6px; cursor: pointer;
-            font-size: 14px; font-weight: bold; transition: background 0.3s;
+            background: var(--btn-color); color: white; border: none;
+            padding: 10px 20px; border-radius: 8px; cursor: pointer;
+            font-size: 14px; font-weight: bold; transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        button:hover { background-color: var(--btn-hover); }
-        button.danger { background-color: var(--danger-color); }
-        button.danger:hover { background-color: #a71d2a; }
-        button.info { background-color: var(--info-color); }
-        button.info:hover { background-color: #117a8b; }
-        button.success { background-color: var(--success-color); }
-        button.success:hover { background-color: #218838; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        button.danger { background: var(--danger-color); }
+        button.info { background: var(--info-color); }
+        button.success { background: var(--success-color); }
+        button.share { background: var(--share-color); color: #333; }
 
         /* Navigation */
         .nav-menu {
@@ -90,63 +104,67 @@
         }
 
         .employee-card {
-            background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;
-            padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border: none; border-radius: 12px;
+            padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative;
+            transition: transform 0.3s;
         }
+        .employee-card:hover { transform: translateY(-5px); }
 
-        .employee-card h3 { margin-bottom: 10px; color: var(--btn-color); }
-        .card-actions { margin-top: 15px; display: flex; gap: 8px; flex-wrap: wrap; }
-        .card-actions button { flex: 1; padding: 8px; font-size: 13px; }
+        .employee-card h3 { margin-bottom: 10px; background: none; -webkit-text-fill-color: #333; color: #333; text-align: left;}
+        .card-actions { margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .card-actions button { padding: 8px; font-size: 13px; width: 100%; }
 
         .emp-card-img {
-            position: absolute; top: 15px; right: 15px; width: 60px; height: 60px;
-            border-radius: 50%; object-fit: cover; border: 2px solid #ccc;
+            position: absolute; top: 20px; right: 20px; width: 70px; height: 70px;
+            border-radius: 50%; object-fit: cover; border: 3px solid #FF512F; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         /* Document Upload & Work Exp Section */
-        .doc-section, .exp-section { background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #b0d4ff; }
+        .doc-section, .exp-section { 
+            background: linear-gradient(to right, #f8f9fa, #e9ecef); 
+            padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid #8E54E9; 
+        }
         
         .work-exp-block {
             background: #fff; border: 1px solid #ddd; padding: 15px; 
-            border-radius: 6px; margin-bottom: 10px; position: relative;
+            border-radius: 8px; margin-bottom: 10px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .remove-exp-btn { position: absolute; top: 10px; right: 10px; padding: 5px 10px; font-size: 12px; }
 
         /* Modal Styles */
         .modal {
             position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center;
+            background-color: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: white; padding: 30px; border-radius: 10px;
-            width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative;
+            background-color: white; padding: 30px; border-radius: 12px;
+            width: 95%; max-width: 850px; max-height: 90vh; overflow-y: auto; position: relative;
         }
 
-        .close-btn { position: absolute; top: 15px; right: 20px; color: red; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: #ff00cc; font-size: 32px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .close-btn:hover { color: #333399; transform: scale(1.1); }
 
-        .doc-item { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 8px; background: #fdfdfd; text-align: center; }
-        .doc-item img { max-width: 100%; border: 1px solid #ccc; margin-top: 10px; border-radius: 4px; max-height: 400px;}
+        .doc-item { margin-bottom: 20px; padding: 20px; border-radius: 10px; background: #f4f7f6; text-align: center; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
+        .doc-item img { max-width: 100%; border: 3px solid #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 10px; border-radius: 8px; max-height: 400px;}
         
+        .doc-actions { margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .download-link {
-            display: inline-block; margin-top: 15px; background: #28a745; color: white;
-            padding: 8px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;
+            display: inline-block; background: var(--success-color); color: white;
+            padding: 8px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .profile-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .profile-table th, .profile-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        .profile-table th { background-color: #f4f4f4; width: 35%; }
+        .profile-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
+        .profile-table th, .profile-table td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        .profile-table th { background-color: #f8f9fa; width: 35%; color: #333; font-weight: bold; }
 
         /* --- PDF SPECIFIC STYLES --- */
-        #pdf-export-container {
-            position: absolute; top: 0; left: 0; width: 800px; z-index: -1000; opacity: 0; pointer-events: none;
-        }
-
+        #pdf-export-container { position: absolute; top: 0; left: 0; width: 800px; z-index: -1000; opacity: 0; pointer-events: none; }
         .pdf-page { width: 100%; padding: 40px; box-sizing: border-box; background: #ffffff; font-size: 16px; line-height: 1.6; color: #000; }
-        
         #profile-pdf-view { border: 2px solid #ccc; }
-        .pdf-header { text-align: center; text-decoration: underline; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #0056b3; }
-        
+        .pdf-header { text-align: center; text-decoration: underline; margin-bottom: 20px; font-size: 24px; font-weight: bold; color: #0056b3; background: none; -webkit-text-fill-color: #000;}
         .pdf-profile-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
         .pdf-profile-photo { width: 120px; height: 120px; object-fit: cover; border: 2px solid #333; border-radius: 8px; }
         .pdf-info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -159,33 +177,33 @@
     <div class="container" id="main-container">
         <!-- LOGIN SECTION -->
         <div id="login-section">
-            <h1>Index Wallet Pradip Patra</h1>
-            <h2>Login</h2>
+            <h1>Index Wallet</h1>
+            <h2>Pradip Patra</h2>
             <form id="login-form">
                 <div class="form-group"><label>User ID</label><input type="text" id="userid" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="password" required></div>
-                <p id="login-error" style="color: red; display: none; margin-bottom: 10px;">Invalid Credentials!</p>
-                <button type="submit" style="width: 100%;">Login</button>
+                <p id="login-error" style="color: red; display: none; margin-bottom: 10px; font-weight:bold;">Invalid Credentials!</p>
+                <button type="submit" style="width: 100%; padding:15px; font-size:16px;">Secure Login</button>
             </form>
         </div>
 
         <!-- DASHBOARD -->
         <div id="dashboard-section" class="hidden">
-            <h1>Index Wallet Pradip Patra</h1>
+            <h1>Index Wallet Dashboard</h1>
             
             <div class="nav-menu">
-                <button onclick="showView('add-employee-view')">Add Employee</button>
-                <button onclick="renderEmployeeList(); showView('view-employee-view')">View Employee Details</button>
-                <button class="danger" onclick="logout()">Logout</button>
+                <button onclick="showView('add-employee-view')">➕ Add Employee</button>
+                <button onclick="renderEmployeeList(); showView('view-employee-view')">👥 View Directory</button>
+                <button class="danger" onclick="logout()">🚪 Logout</button>
             </div>
 
             <!-- VIEW 1: ADD EMPLOYEE -->
             <div id="add-employee-view">
-                <h2 id="form-title">Add New Employee</h2>
+                <h2 id="form-title">Add New Employee Profile</h2>
                 <form id="employee-form">
                     <input type="hidden" id="edit-id" value="">
                     
-                    <div class="doc-section form-row" style="background:#e8f4fd;">
+                    <div class="doc-section form-row" style="background: linear-gradient(to right, #e0c3fc 0%, #8ec5fc 100%);">
                         <div class="form-col"><label>Upload Employee Photo (Any Size)</label><input type="file" id="empPhoto" accept=".jpg,.jpeg,.png"></div>
                     </div>
 
@@ -200,7 +218,7 @@
                     </div>
 
                     <div class="form-row">
-                        <div class="form-col"><label>Husband / Wife Name (Spouse)</label><input type="text" id="spouseName"></div>
+                        <div class="form-col"><label>Spouse Name</label><input type="text" id="spouseName"></div>
                         <div class="form-col"><label>Date of Birth</label><input type="date" id="dob" required></div>
                     </div>
 
@@ -216,7 +234,7 @@
                     <h3 style="margin-top:30px; text-align: left; border-bottom: 2px solid #ccc; padding-bottom:5px;">Work Experience</h3>
                     <div class="exp-section">
                         <div id="work-exp-container"></div>
-                        <button type="button" class="success" onclick="addWorkExpBlock()">+ Add Work Experience</button>
+                        <button type="button" class="success" onclick="addWorkExpBlock()">+ Add Experience</button>
                     </div>
 
                     <!-- DOCUMENTS SECTION -->
@@ -253,11 +271,11 @@
                     </div>
 
                     <div class="doc-section form-row">
-                        <div class="form-col"><label>Other Documents (Details)</label><input type="text" id="otherNum"></div>
+                        <div class="form-col"><label>Other Documents</label><input type="text" id="otherNum"></div>
                         <div class="form-col"><label>Upload Other Docs (Any Size)</label><input type="file" id="otherDoc" accept=".pdf,.jpg,.jpeg,.png"></div>
                     </div>
 
-                    <button type="submit" id="saveBtn" style="width: 100%; margin-top: 10px; padding: 15px; font-size: 18px;">Save Employee Details</button>
+                    <button type="submit" id="saveBtn" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 18px;">💾 Save Details</button>
                 </form>
             </div>
 
@@ -325,7 +343,7 @@
     </div>
 
     <script>
-        // --- INDEXED DB SETUP FOR UNLIMITED STORAGE ---
+        // --- INDEXED DB SETUP ---
         let db;
         const dbName = "EmployeeDatabase";
         const dbVersion = 1;
@@ -339,60 +357,45 @@
                         db.createObjectStore("employees", { keyPath: "id" });
                     }
                 };
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    resolve();
-                };
+                request.onsuccess = (event) => { db = event.target.result; resolve(); };
                 request.onerror = (event) => reject("DB Error");
             });
         }
 
-        // Initialize DB on page load
-        window.onload = async () => {
-            await initDB();
-        };
+        window.onload = async () => { await initDB(); };
 
-        // DB Helper Functions
         function saveEmployeeToDB(employee) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(["employees"], "readwrite");
-                const store = transaction.objectStore("employees");
-                const request = store.put(employee);
+                const request = transaction.objectStore("employees").put(employee);
                 request.onsuccess = () => resolve();
                 request.onerror = () => reject("Save failed");
             });
         }
-
         function getAllEmployeesFromDB() {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(["employees"], "readonly");
-                const store = transaction.objectStore("employees");
-                const request = store.getAll();
+                const request = transaction.objectStore("employees").getAll();
                 request.onsuccess = () => resolve(request.result);
                 request.onerror = () => reject("Fetch failed");
             });
         }
-
         function getEmployeeById(id) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(["employees"], "readonly");
-                const store = transaction.objectStore("employees");
-                const request = store.get(id);
+                const request = transaction.objectStore("employees").get(id);
                 request.onsuccess = () => resolve(request.result);
                 request.onerror = () => reject("Fetch failed");
             });
         }
-
         function deleteEmployeeFromDB(id) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(["employees"], "readwrite");
-                const store = transaction.objectStore("employees");
-                const request = store.delete(id);
+                const request = transaction.objectStore("employees").delete(id);
                 request.onsuccess = () => resolve();
                 request.onerror = () => reject("Delete failed");
             });
         }
-
 
         // --- LOGIN & NAVIGATION ---
         document.getElementById('login-form').addEventListener('submit', function(e) {
@@ -415,28 +418,23 @@
         }
 
         function showView(viewId) {
-            ['add-employee-view', 'view-employee-view'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
+            ['add-employee-view', 'view-employee-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(viewId).classList.remove('hidden');
             if(viewId === 'add-employee-view') {
                 document.getElementById('employee-form').reset();
                 document.getElementById('edit-id').value = "";
-                document.getElementById('work-exp-container').innerHTML = ""; // Clear exp
-                document.getElementById('form-title').innerText = "Add New Employee";
-                document.getElementById('saveBtn').innerText = "Save Employee Details";
+                document.getElementById('work-exp-container').innerHTML = "";
+                document.getElementById('form-title').innerText = "Add New Employee Profile";
+                document.getElementById('saveBtn').innerHTML = "💾 Save Details";
             }
         }
 
         function copyAddress() {
             if(document.getElementById('sameAddress').checked) {
                 document.getElementById('permAddress').value = document.getElementById('presAddress').value;
-            } else {
-                document.getElementById('permAddress').value = "";
-            }
+            } else document.getElementById('permAddress').value = "";
         }
 
-        // --- DYNAMIC WORK EXPERIENCE ---
         function addWorkExpBlock(comp='', role='', dur='') {
             const container = document.getElementById('work-exp-container');
             const block = document.createElement('div');
@@ -444,15 +442,14 @@
             block.innerHTML = `
                 <button type="button" class="danger remove-exp-btn" onclick="this.parentElement.remove()">X Remove</button>
                 <div class="form-row">
-                    <div class="form-col"><label>Previous Company Name</label><input type="text" class="we-comp" value="${comp}"></div>
-                    <div class="form-col"><label>Designation / Role</label><input type="text" class="we-role" value="${role}"></div>
-                    <div class="form-col"><label>Duration (e.g. 2020-2022)</label><input type="text" class="we-dur" value="${dur}"></div>
+                    <div class="form-col"><label>Company Name</label><input type="text" class="we-comp" value="${comp}"></div>
+                    <div class="form-col"><label>Role</label><input type="text" class="we-role" value="${role}"></div>
+                    <div class="form-col"><label>Duration</label><input type="text" class="we-dur" value="${dur}"></div>
                 </div>
             `;
             container.appendChild(block);
         }
 
-        // --- FILE SAVING ---
         function getBase64(file) {
             return new Promise((resolve, reject) => {
                 if (!file) { resolve(null); return; }
@@ -465,30 +462,24 @@
 
         document.getElementById('employee-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            document.getElementById('saveBtn').innerText = "Saving Large Files... Please wait!";
+            document.getElementById('saveBtn').innerText = "⏳ Saving Files... Please wait!";
             document.getElementById('saveBtn').disabled = true;
 
             try {
-                // Collect Work Experience
                 const expBlocks = document.querySelectorAll('.work-exp-block');
                 const workExpArray = [];
                 expBlocks.forEach(b => {
-                    const c = b.querySelector('.we-comp').value;
-                    const r = b.querySelector('.we-role').value;
-                    const d = b.querySelector('.we-dur').value;
+                    const c = b.querySelector('.we-comp').value, r = b.querySelector('.we-role').value, d = b.querySelector('.we-dur').value;
                     if(c || r || d) workExpArray.push({ comp: c, role: r, dur: d });
                 });
 
                 const editId = document.getElementById('edit-id').value;
                 let existingDocs = {};
-                
                 if (editId) {
                     const existingEmp = await getEmployeeById(editId);
                     if(existingEmp && existingEmp.docs) existingDocs = existingEmp.docs;
                 }
 
-                // Gather new files or keep existing ones
                 const getNewOrOld = async (elementId, docKey) => {
                     const file = document.getElementById(elementId).files[0];
                     if(file) return await getBase64(file);
@@ -527,28 +518,25 @@
                 };
 
                 await saveEmployeeToDB(empData);
-                
                 alert("Employee Saved Successfully!");
                 showView('view-employee-view');
                 await renderEmployeeList();
 
             } catch (error) {
-                console.error(error);
                 alert("Error saving data!");
             } finally {
-                document.getElementById('saveBtn').innerText = "Save Employee Details";
+                document.getElementById('saveBtn').innerHTML = "💾 Save Details";
                 document.getElementById('saveBtn').disabled = false;
             }
         });
 
-        // --- EMPLOYEE DIRECTORY ---
         async function renderEmployeeList() {
             const container = document.getElementById('employee-list-container');
-            container.innerHTML = '<p>Loading database...</p>';
+            container.innerHTML = '<p style="text-align:center; font-weight:bold;">Loading...</p>';
             const employees = await getAllEmployeesFromDB();
 
             if(employees.length === 0) {
-                container.innerHTML = '<p style="text-align:center; grid-column: 1 / -1;">No employees found. Please add an employee.</p>';
+                container.innerHTML = '<p style="text-align:center; grid-column: 1 / -1; color:#fff; font-size:18px;">No employees found. Please add an employee.</p>';
                 return;
             }
 
@@ -564,12 +552,12 @@
                         ${imgHtml}
                         <h3 style="margin-right: 65px;">${emp.empName}</h3>
                         <p><strong>Company:</strong> ${emp.compName}</p>
-                        <p><strong>Employee ID:</strong> ${emp.empIdInput}</p>
+                        <p><strong>Emp ID:</strong> ${emp.empIdInput}</p>
                         <div class="card-actions">
-                            <button class="info" onclick="viewProfile('${emp.id}')">Profile</button>
-                            <button style="background:#28a745;" onclick="viewDocs('${emp.id}')">Docs</button>
-                            <button onclick="editEmployee('${emp.id}')">Edit</button>
-                            <button class="danger" onclick="deleteEmployee('${emp.id}')">Delete</button>
+                            <button class="info" onclick="viewProfile('${emp.id}')">👁️ Profile</button>
+                            <button class="success" onclick="viewDocs('${emp.id}')">📁 Docs</button>
+                            <button onclick="editEmployee('${emp.id}')">✏️ Edit</button>
+                            <button class="danger" onclick="deleteEmployee('${emp.id}')">🗑️ Delete</button>
                         </div>
                     </div>`;
             });
@@ -586,15 +574,14 @@
             const emp = await getEmployeeById(id);
             if(emp) {
                 showView('add-employee-view');
-                document.getElementById('form-title').innerText = "Edit Employee";
-                document.getElementById('saveBtn').innerText = "Update Employee Details";
+                document.getElementById('form-title').innerText = "Edit Employee Profile";
+                document.getElementById('saveBtn').innerHTML = "💾 Update Details";
                 document.getElementById('edit-id').value = emp.id;
                 
                 ['empName', 'compName', 'fatherName', 'motherName', 'spouseName', 'dob', 'doj', 'presAddress', 'permAddress', 'empIdInput', 'aadhaarNum', 'voterNum', 'panNum', 'policeNum', 'bankAccNum', 'otherNum'].forEach(field => {
                     if(document.getElementById(field)) document.getElementById(field).value = emp[field] || "";
                 });
 
-                // Load Exp
                 document.getElementById('work-exp-container').innerHTML = '';
                 if(emp.workExperience && emp.workExperience.length > 0) {
                     emp.workExperience.forEach(ex => addWorkExpBlock(ex.comp, ex.role, ex.dur));
@@ -602,7 +589,7 @@
             }
         }
 
-        // --- FULL PROFILE MODAL & PDF DOWNLOAD ---
+        // --- FULL PROFILE MODAL, PDF & TEXT SHARE ---
         async function viewProfile(id) {
             const emp = await getEmployeeById(id);
             if(emp) {
@@ -613,14 +600,15 @@
                         expHtml += `<li><strong>${ex.comp}</strong> as ${ex.role} (${ex.dur})</li>`;
                     });
                     expHtml += '</ul>';
-                } else {
-                    expHtml = '<p>No Work Experience Added.</p><br>';
-                }
+                } else expHtml = '<p>No Work Experience Added.</p><br>';
 
                 document.getElementById('modal-profile-container').innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h2 style="margin:0;">Employee Full Profile</h2>
-                        <button class="info" onclick="downloadProfilePdf('${emp.id}')">Download Profile PDF</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+                        <h2 style="margin:0;">Employee Profile</h2>
+                        <div>
+                            <button class="share" onclick="shareProfileText('${emp.id}')">📲 Share Profile</button>
+                            <button class="info" onclick="downloadProfilePdf('${emp.id}')">📄 Download PDF</button>
+                        </div>
                     </div>
                     <table class="profile-table">
                         <tr><th>Employee Name</th><td>${emp.empName}</td></tr>
@@ -629,20 +617,47 @@
                         <tr><th>Father's Name</th><td>${emp.fatherName}</td></tr>
                         <tr><th>Mother's Name</th><td>${emp.motherName}</td></tr>
                         <tr><th>Spouse Name</th><td>${emp.spouseName || 'N/A'}</td></tr>
-                        <tr><th>Date of Birth</th><td>${emp.dob}</td></tr>
-                        <tr><th>Date of Joining</th><td>${emp.doj}</td></tr>
+                        <tr><th>DOB</th><td>${emp.dob}</td></tr>
+                        <tr><th>DOJ</th><td>${emp.doj}</td></tr>
                         <tr><th>Present Address</th><td>${emp.presAddress}</td></tr>
                         <tr><th>Permanent Address</th><td>${emp.permAddress}</td></tr>
                         <tr><th>Aadhaar Number</th><td>${emp.aadhaarNum || 'N/A'}</td></tr>
-                        <tr><th>Voter Card Number</th><td>${emp.voterNum || 'N/A'}</td></tr>
-                        <tr><th>PAN Card Number</th><td>${emp.panNum || 'N/A'}</td></tr>
-                        <tr><th>Bank Account Number</th><td>${emp.bankAccNum || 'N/A'}</td></tr>
-                        <tr><th>Police Verification Cert</th><td>${emp.policeNum || 'N/A'}</td></tr>
+                        <tr><th>Voter Card</th><td>${emp.voterNum || 'N/A'}</td></tr>
+                        <tr><th>PAN Card</th><td>${emp.panNum || 'N/A'}</td></tr>
+                        <tr><th>Bank A/C</th><td>${emp.bankAccNum || 'N/A'}</td></tr>
+                        <tr><th>Police Cert</th><td>${emp.policeNum || 'N/A'}</td></tr>
                         <tr><th>Other Details</th><td>${emp.otherNum || 'N/A'}</td></tr>
                     </table>
                     <div style="margin-top: 15px;">${expHtml}</div>
                 `;
                 document.getElementById('profile-modal').classList.remove('hidden');
+            }
+        }
+
+        async function shareProfileText(id) {
+            const emp = await getEmployeeById(id);
+            if(!emp) return;
+
+            let shareText = `*Employee Profile Details*\n\n`;
+            shareText += `Name: ${emp.empName}\n`;
+            shareText += `Company: ${emp.compName}\n`;
+            shareText += `Emp ID: ${emp.empIdInput}\n`;
+            shareText += `Father's Name: ${emp.fatherName}\n`;
+            shareText += `Mother's Name: ${emp.motherName}\n`;
+            shareText += `DOB: ${emp.dob} | DOJ: ${emp.doj}\n`;
+            shareText += `Present Address: ${emp.presAddress}\n`;
+            if(emp.aadhaarNum) shareText += `Aadhaar: ${emp.aadhaarNum}\n`;
+            if(emp.panNum) shareText += `PAN: ${emp.panNum}\n`;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `${emp.empName} - Profile`,
+                        text: shareText
+                    });
+                } catch (err) { console.log("Share failed", err); }
+            } else {
+                alert("Sharing is not supported on your browser. Please copy details manually.");
             }
         }
 
@@ -667,16 +682,11 @@
             document.getElementById('pdf-bank').innerText = emp.bankAccNum || 'N/A';
             document.getElementById('pdf-police').innerText = emp.policeNum || 'N/A';
 
-            // Set Photo
             const photoEl = document.getElementById('pdf-emp-photo');
             if(emp.docs && emp.docs.empPhoto && emp.docs.empPhoto.data) {
-                photoEl.src = emp.docs.empPhoto.data;
-                photoEl.style.display = 'block';
-            } else {
-                photoEl.style.display = 'none';
-            }
+                photoEl.src = emp.docs.empPhoto.data; photoEl.style.display = 'block';
+            } else photoEl.style.display = 'none';
 
-            // Set Exp
             let expHtmlPdf = '';
             if(emp.workExperience && emp.workExperience.length > 0) {
                 expHtmlPdf = '<ul style="margin-left: 20px;">';
@@ -684,50 +694,87 @@
                     expHtmlPdf += `<li style="margin-bottom:8px;"><strong>${ex.comp}</strong> — Worked as <strong>${ex.role}</strong> (${ex.dur})</li>`;
                 });
                 expHtmlPdf += '</ul>';
-            } else {
-                expHtmlPdf = '<p style="margin-left:5px;">N/A</p>';
-            }
+            } else expHtmlPdf = '<p style="margin-left:5px;">N/A</p>';
+            
             document.getElementById('pdf-work-exp').innerHTML = expHtmlPdf;
 
-            // Trigger HTML2PDF
             const element = document.getElementById('profile-pdf-view');
             const opt = {
-                margin:       15,
-                filename:     'Profile_' + emp.empName + '.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                margin: 15, filename: 'Profile_' + emp.empName + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             alert("Generating PDF Profile, please wait...");
             html2pdf().set(opt).from(element).save();
         }
 
-        // --- VIEW DOCS MODAL ---
+        // --- VIEW & SHARE DOCS MODAL ---
         async function viewDocs(id) {
             const emp = await getEmployeeById(id);
             if(emp) {
-                let html = `<h3>Documents for: ${emp.empName}</h3><br>`;
-                const genDoc = (docObj, title, numStr) => {
+                let html = `<h3 style="margin-bottom:15px;">Documents: ${emp.empName}</h3>`;
+                
+                const genDoc = (docObj, docKey, title, numStr) => {
                     let res = `<div class="doc-item"><h4>${title} ${numStr ? '(No: '+numStr+')' : ''}</h4>`;
                     if(docObj && docObj.data) {
-                        if(docObj.type.startsWith('image/')) res += `<img src="${docObj.data}"><br><a class="download-link" href="${docObj.data}" download="${docObj.name}">Download Image</a>`;
-                        else res += `<p style="color:green; font-weight:bold;">File Attached.</p><a class="download-link" href="${docObj.data}" download="${docObj.name}">Download File</a>`;
-                    } else res += `<p style="color:gray;">Not Uploaded</p>`;
+                        if(docObj.type.startsWith('image/')) {
+                            res += `<img src="${docObj.data}"><br>`;
+                        } else {
+                            res += `<p style="color:#28a745; font-weight:bold; font-size:18px; margin: 10px 0;">📄 File Uploaded Successfully.</p>`;
+                        }
+                        res += `<div class="doc-actions">
+                                    <a class="download-link" href="${docObj.data}" download="${docObj.name}">⬇️ Download</a>
+                                    <button class="share" onclick="shareSingleDoc('${emp.id}', '${docKey}')">📲 Share Document</button>
+                                </div>`;
+                    } else {
+                        res += `<p style="color:#777; margin-top:10px;">Not Uploaded</p>`;
+                    }
                     return res + `</div>`;
                 };
                 
-                html += genDoc(emp.docs.empPhoto, 'Employee Photo', '');
-                html += genDoc(emp.docs.empIdDoc, 'Employee ID', emp.empIdInput);
-                html += genDoc(emp.docs.aadhaarDoc, 'Aadhaar Card', emp.aadhaarNum);
-                html += genDoc(emp.docs.voterDoc, 'Voter Card', emp.voterNum);
-                html += genDoc(emp.docs.panDoc, 'PAN Card', emp.panNum);
-                html += genDoc(emp.docs.policeDoc, 'Police Verification', emp.policeNum);
-                html += genDoc(emp.docs.bankDoc, 'Bank Details', emp.bankAccNum);
-                html += genDoc(emp.docs.otherDoc, 'Other Documents', emp.otherNum);
+                html += genDoc(emp.docs.empPhoto, 'empPhoto', 'Employee Photo', '');
+                html += genDoc(emp.docs.empIdDoc, 'empIdDoc', 'Employee ID', emp.empIdInput);
+                html += genDoc(emp.docs.aadhaarDoc, 'aadhaarDoc', 'Aadhaar Card', emp.aadhaarNum);
+                html += genDoc(emp.docs.voterDoc, 'voterDoc', 'Voter Card', emp.voterNum);
+                html += genDoc(emp.docs.panDoc, 'panDoc', 'PAN Card', emp.panNum);
+                html += genDoc(emp.docs.policeDoc, 'policeDoc', 'Police Verification', emp.policeNum);
+                html += genDoc(emp.docs.bankDoc, 'bankDoc', 'Bank Details', emp.bankAccNum);
+                html += genDoc(emp.docs.otherDoc, 'otherDoc', 'Other Documents', emp.otherNum);
                 
                 document.getElementById('modal-docs-container').innerHTML = html;
                 document.getElementById('doc-modal').classList.remove('hidden');
+            }
+        }
+
+        // Convert base64 to File object for sharing
+        function dataURLtoFile(dataurl, filename) {
+            let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+            while(n--){ u8arr[n] = bstr.charCodeAt(n); }
+            return new File([u8arr], filename, {type:mime});
+        }
+
+        async function shareSingleDoc(empId, docKey) {
+            const emp = await getEmployeeById(empId);
+            if(emp && emp.docs && emp.docs[docKey]) {
+                const docObj = emp.docs[docKey];
+                
+                if (navigator.canShare && navigator.canShare({ files: [] })) {
+                    try {
+                        const file = dataURLtoFile(docObj.data, docObj.name);
+                        await navigator.share({
+                            title: docObj.name,
+                            text: `Document for ${emp.empName}`,
+                            files: [file]
+                        });
+                    } catch (error) {
+                        console.log('Error sharing:', error);
+                    }
+                } else {
+                    alert("Your browser does not support sharing files directly. Please use the Download button instead.");
+                }
             }
         }
 
